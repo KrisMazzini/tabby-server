@@ -1,0 +1,18 @@
+pre-commit:
+  commands:
+    check:
+      run: yarn format {staged_files}
+      glob: '*.{js,.mjs,ts,json,md}'
+      stage_fixed: true
+
+pre-push:
+  commands:
+    validate:
+      glob: '*.{ts}'
+      run: yarn typecheck
+    lint:
+      glob: '*.{ts}'
+      run: yarn lint
+    test: 
+      glob: '*.{ts}'
+      run: yarn test

@@ -1,0 +1,29 @@
+{
+	"name": "tabby-server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "tsx watch src/server.ts",
+		"start": "node dist/server.js",
+		"build": "tsup src --out-dir dist",
+		"typecheck": "tsc --noEmit --skipLibCheck",
+		"test": "vitest run --dir src",
+		"test:watch": "vitest --dir src",
+		"test:coverage": "vitest run --dir src --coverage",
+		"test:ui": "vitest --dir src --ui"
+	},
+	"keywords": [],
+	"author": "Kristopher Mazzini",
+	"license": "ISC",
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.9",
+		"@types/node": "^25.5.0",
+		"lefthook": "^2.1.4",
+		"tsup": "^8.5.1",
+		"tsx": "^4.21.0",
+		"typescript": "^6.0.2",
+		"vite-tsconfig-paths": "^6.1.1",
+		"vitest": "^4.1.2"
+	}
+}

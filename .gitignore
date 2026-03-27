@@ -1,0 +1,19 @@
+# Node
+node_modules
+
+# Build
+dist
+
+# Environment
+.env
+
+# Test
+coverage
+
+# Logs
+logs
+*.log
+
+# IDE
+.vscode
+.idea
