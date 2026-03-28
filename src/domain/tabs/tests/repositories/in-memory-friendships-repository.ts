@@ -1,4 +1,12 @@
-import type { FriendshipsRepository } from '../../application/repositories/friendships-repository'
+import {
+	type PaginationParams,
+	paginateInMemory,
+} from '@/core/pagination/pagination'
+
+import type {
+	FriendshipsListFilters,
+	FriendshipsRepository,
+} from '../../application/repositories/friendships-repository'
 import type { Friendship } from '../../enterprise/entities/friendship'
 
 export class InMemoryFriendshipsRepository implements FriendshipsRepository {
@@ -42,7 +50,24 @@ export class InMemoryFriendshipsRepository implements FriendshipsRepository {
 		return this.items.filter(
 			item =>
 				item.fromUserId.toValue() === userId ||
-				item.toUserId.toString() === userId
+				item.toUserId.toValue() === userId
 		)
+	}
+
+	async findManyNonBlockedByUserId(
+		userId: string,
+		pagination: PaginationParams,
+		filters?: FriendshipsListFilters
+	) {
+		let items = await this.findManyByUserId(userId)
+
+		items = items.filter(item => item.status !== 'blocked')
+
+		if (filters?.status) {
+			const status = filters.status
+			items = items.filter(item => item.status === status)
+		}
+
+		return paginateInMemory(items, pagination)
 	}
 }
