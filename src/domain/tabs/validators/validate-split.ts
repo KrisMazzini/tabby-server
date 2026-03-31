@@ -4,13 +4,13 @@ import type { Split } from '../enterprise/value-objects/slice'
 import { DuplicateUserInSplitError } from '../errors/duplicate-user-in-split-error'
 import { EmptySplitSlicesError } from '../errors/empty-split-slices-error'
 import { FixedSplitTotalMismatchError } from '../errors/fixed-split-total-mismatch-error'
-import { InvalidTotalAmountError } from '../errors/invalid-total-amount-error'
+import { InvalidAmountError } from '../errors/invalid-amount-error'
 import { PercentageSplitSumError } from '../errors/percentage-split-sum-error'
 import { SharesSplitError } from '../errors/shares-split-error'
 
 export function validateSplit(totalAmountInCents: number, split: Split) {
 	if (totalAmountInCents <= 0) {
-		throw new InvalidTotalAmountError()
+		throw new InvalidAmountError()
 	}
 
 	const slices = split.slices

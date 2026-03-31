@@ -10,7 +10,7 @@ import {
 import { DuplicateUserInSplitError } from '../errors/duplicate-user-in-split-error'
 import { EmptySplitSlicesError } from '../errors/empty-split-slices-error'
 import { FixedSplitTotalMismatchError } from '../errors/fixed-split-total-mismatch-error'
-import { InvalidTotalAmountError } from '../errors/invalid-total-amount-error'
+import { InvalidAmountError } from '../errors/invalid-amount-error'
 import { PercentageSplitSumError } from '../errors/percentage-split-sum-error'
 import { SharesSplitError } from '../errors/shares-split-error'
 import { validateSplit } from './validate-split'
@@ -35,8 +35,8 @@ describe('Tabs | Validator: validateSplit', () => {
 				slices: [EqualSlice.create(user1), EqualSlice.create(user2)],
 			}
 
-			expect(() => validateSplit(0, split)).toThrow(InvalidTotalAmountError)
-			expect(() => validateSplit(-1, split)).toThrow(InvalidTotalAmountError)
+			expect(() => validateSplit(0, split)).toThrow(InvalidAmountError)
+			expect(() => validateSplit(-1, split)).toThrow(InvalidAmountError)
 		})
 	})
 
