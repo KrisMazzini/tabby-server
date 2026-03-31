@@ -1,6 +1,8 @@
 import { UniqueEntityId } from '@/core/entities/value-objects/unique-entity-id'
+
 import { makePayment } from '../../tests/factories/make-payment'
 import { InMemoryPaymentsRepository } from '../../tests/repositories/in-memory-payments-repository'
+
 import { ListPaymentsUseCase } from './list-payments-use-case'
 
 let paymentsRepository: InMemoryPaymentsRepository
