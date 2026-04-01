@@ -6,7 +6,15 @@
 		"useIgnoreFile": false
 	},
 	"files": {
-		"includes": ["**", "!dist", "!node_modules", "!public", "!*.md"],
+		"includes": [
+			"**",
+			"!dist",
+			"!node_modules",
+			"!public",
+			"!*.md",
+			"!generated/prisma",
+			"!coverage"
+		],
 		"ignoreUnknown": false
 	},
 	"formatter": {
