@@ -2,16 +2,20 @@
 	"name": "tabby-server",
 	"version": "1.0.0",
 	"description": "",
+	"type": "module",
 	"main": "index.js",
 	"scripts": {
-		"dev": "tsx watch src/server.ts",
-		"start": "node dist/server.js",
+		"dev": "tsx watch src/infra/server.ts",
+		"start": "node dist/infra/server.cjs",
 		"build": "tsup src --out-dir dist",
 		"typecheck": "tsc --noEmit --skipLibCheck",
 		"test": "vitest run --dir src",
 		"test:watch": "vitest --dir src",
 		"test:coverage": "vitest run --dir src --coverage",
-		"test:ui": "vitest --dir src --ui"
+		"test:ui": "vitest --dir src --ui",
+		"prisma:generate": "prisma generate",
+		"prisma:migrate": "prisma migrate dev",
+		"prisma:deploy": "prisma migrate deploy"
 	},
 	"keywords": [],
 	"author": "Kristopher Mazzini",
@@ -20,15 +24,24 @@
 		"@biomejs/biome": "^2.4.9",
 		"@faker-js/faker": "^10.4.0",
 		"@types/node": "^25.5.0",
+		"@types/pg": "^8.20.0",
 		"@vitest/coverage-v8": "4.1.2",
 		"lefthook": "^2.1.4",
+		"prisma": "^7.6.0",
 		"tsup": "^8.5.1",
 		"tsx": "^4.21.0",
 		"typescript": "^6.0.2",
-		"vite-tsconfig-paths": "^6.1.1",
 		"vitest": "^4.1.2"
 	},
 	"dependencies": {
-		"dayjs": "^1.11.20"
+		"@fastify/cookie": "^11.0.2",
+		"@fastify/jwt": "^10.0.0",
+		"@prisma/adapter-pg": "^7.6.0",
+		"@prisma/client": "^7.6.0",
+		"dayjs": "^1.11.20",
+		"dotenv": "^17.3.1",
+		"fastify": "^5.8.4",
+		"pg": "^8.20.0",
+		"zod": "^4.3.6"
 	}
 }

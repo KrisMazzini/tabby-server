@@ -6,7 +6,7 @@ import type { MagicTokensRepository } from '../repositories/magic-tokens-reposit
 import type { UsersRepository } from '../repositories/users-repository'
 
 export interface CreateMagicTokenUseCaseRequest {
-	userId: string
+	email: string
 }
 
 export interface CreateMagicTokenUseCaseResponse {
@@ -20,13 +20,15 @@ export class CreateMagicTokenUseCase {
 	) {}
 
 	async execute({
-		userId,
+		email,
 	}: CreateMagicTokenUseCaseRequest): Promise<CreateMagicTokenUseCaseResponse> {
-		const user = await this.usersRepository.findById(userId)
+		const user = await this.usersRepository.findByEmail(email)
 
 		if (!user) {
 			throw new ResourceNotFoundError('User')
 		}
+
+		const userId = user.id.toString()
 
 		const token = MagicToken.create({
 			userId: new UniqueEntityId(userId),

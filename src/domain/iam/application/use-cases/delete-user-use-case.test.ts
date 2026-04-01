@@ -4,7 +4,7 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { makeUser } from '../../tests/factories/make-user'
 import { InMemoryUsersRepository } from '../../tests/repositories/in-memory-users-repositories'
 
-import { DeleteUserUseCase } from './delete-user'
+import { DeleteUserUseCase } from './delete-user-use-case'
 
 let usersRepository: InMemoryUsersRepository
 let sut: DeleteUserUseCase
