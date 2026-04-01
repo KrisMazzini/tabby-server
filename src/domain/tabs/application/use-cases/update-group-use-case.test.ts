@@ -3,6 +3,7 @@ import { NotAllowedError } from '@/core/errors/not-allowed-error'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 
 import { GroupMember } from '../../enterprise/value-objects/group-member'
+import { makeCurrency } from '../../tests/factories/make-currency'
 import { makeGroup } from '../../tests/factories/make-group'
 import { InMemoryGroupsRepository } from '../../tests/repositories/in-memory-groups-repository'
 
@@ -35,13 +36,16 @@ describe('Tabs | Use Case: UpdateGroup', () => {
 			groupId: group.id.toString(),
 			userId: 'member-1',
 			name: 'New name',
+			defaultCurrency: makeCurrency({ iso: 'EUR' }),
 		})
 
 		expect(updated.name).toBe('New name')
+		expect(updated.defaultCurrency.iso).toBe('EUR')
 
 		const persisted = await groupsRepository.findById(group.id.toString())
 
 		expect(persisted?.name).toBe('New name')
+		expect(persisted?.defaultCurrency.iso).toBe('EUR')
 	})
 
 	it('should not update when the group does not exist', async () => {
@@ -50,6 +54,7 @@ describe('Tabs | Use Case: UpdateGroup', () => {
 				groupId: 'missing',
 				userId: 'user-1',
 				name: 'X',
+				defaultCurrency: makeCurrency({ iso: 'EUR' }),
 			})
 		).rejects.toBeInstanceOf(ResourceNotFoundError)
 	})
@@ -72,6 +77,7 @@ describe('Tabs | Use Case: UpdateGroup', () => {
 				groupId: group.id.toString(),
 				userId: 'pending-1',
 				name: 'Hacked',
+				defaultCurrency: makeCurrency({ iso: 'EUR' }),
 			})
 		).rejects.toBeInstanceOf(NotAllowedError)
 
@@ -90,6 +96,7 @@ describe('Tabs | Use Case: UpdateGroup', () => {
 				groupId: group.id.toString(),
 				userId: 'stranger',
 				name: 'Hacked',
+				defaultCurrency: makeCurrency({ iso: 'EUR' }),
 			})
 		).rejects.toBeInstanceOf(NotAllowedError)
 	})

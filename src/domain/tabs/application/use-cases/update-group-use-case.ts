@@ -3,13 +3,14 @@ import { NotAllowedError } from '@/core/errors/not-allowed-error'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 
 import type { Group } from '../../enterprise/entities/group'
-
+import type { Currency } from '../../enterprise/value-objects/currency'
 import type { GroupsRepository } from '../repositories/groups-repository'
 
 interface UpdateGroupUseCaseRequest {
 	groupId: string
 	userId: string
 	name: string
+	defaultCurrency: Currency
 }
 
 interface UpdateGroupUseCaseResponse {
@@ -23,6 +24,7 @@ export class UpdateGroupUseCase {
 		groupId,
 		userId,
 		name,
+		defaultCurrency,
 	}: UpdateGroupUseCaseRequest): Promise<UpdateGroupUseCaseResponse> {
 		const group = await this.groupsRepository.findById(groupId)
 
@@ -35,6 +37,7 @@ export class UpdateGroupUseCase {
 		}
 
 		group.name = name
+		group.defaultCurrency = defaultCurrency
 
 		await this.groupsRepository.save(group)
 

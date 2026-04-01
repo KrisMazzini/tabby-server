@@ -18,6 +18,11 @@ enum FriendshipStatus {
   blocked
 }
 
+enum GroupMemberStatus {
+  pending
+  accepted
+}
+
 model User {
   id          String    @id @default(uuid())
   email       String    @unique
@@ -27,8 +32,10 @@ model User {
   updatedAt   DateTime? @updatedAt @map("updated_at")
 
   magicTokens         MagicToken[]
-  friendshipsCreated  Friendship[] @relation("FriendshipFrom")
-  friendshipsReceived Friendship[] @relation("FriendshipTo")
+  friendshipsCreated  Friendship[]  @relation("FriendshipFrom")
+  friendshipsReceived Friendship[]  @relation("FriendshipTo")
+  ownedGroups         Group[]       @relation("GroupOwner")
+  groupMemberships    GroupMember[]
 
   @@map("users")
 }
@@ -61,4 +68,34 @@ model Friendship {
   @@index([fromUserId])
   @@index([toUserId])
   @@map("friendships")
+}
+
+model Group {
+  id                 String    @id @default(uuid())
+  name               String
+  ownerId            String    @map("owner_id")
+  defaultCurrencyIso String    @map("default_currency_iso")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime? @updatedAt @map("updated_at")
+
+  owner   User          @relation("GroupOwner", fields: [ownerId], references: [id])
+  members GroupMember[]
+
+  @@index([ownerId])
+  @@map("groups")
+}
+
+model GroupMember {
+  groupId  String            @map("group_id")
+  userId   String            @map("user_id")
+  status   GroupMemberStatus
+  joinedAt DateTime?         @map("joined_at")
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([groupId, userId])
+  @@index([groupId])
+  @@index([userId])
+  @@map("group_members")
 }

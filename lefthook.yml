@@ -1,7 +1,7 @@
 pre-commit:
   commands:
     check:
-      run: yarn format {staged_files}
+      run: pnpm format {staged_files}
       glob: '*.{js,.mjs,ts,json,md}'
       stage_fixed: true
 
@@ -9,10 +9,10 @@ pre-push:
   commands:
     validate:
       glob: '*.{ts}'
-      run: yarn typecheck
+      run: pnpm typecheck
     lint:
       glob: '*.{ts}'
-      run: yarn lint
+      run: pnpm lint
     test: 
       glob: '*.{ts}'
-      run: yarn test
+      run: pnpm test
