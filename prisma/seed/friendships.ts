@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 
 import type { User } from '@/domain/iam/enterprise/entities/user'
 import { makeFriendship } from '@/domain/tabs/tests/factories/make-friendship'
-import { PrismaFriendshipsRepository } from '@/infra/database/prisma/repositories/prisma-friendships-repositories'
+import { PrismaFriendshipsRepository } from '@/infra/database/prisma/repositories/prisma-friendships-repository'
 
 export async function seedFriendships(users: User[]) {
 	if (users.length < 2) {
