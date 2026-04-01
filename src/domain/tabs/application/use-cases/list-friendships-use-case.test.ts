@@ -10,23 +10,38 @@ let sut: ListFriendshipsUseCase
 
 const userId = new UniqueEntityId('alice')
 
-const sentFriendship = makeFriendship({
-	fromUserId: userId,
-	toUserId: new UniqueEntityId('bob'),
-	status: 'accepted',
-})
+const sentFriendship = makeFriendship(
+	{
+		fromUserId: userId,
+		toUserId: new UniqueEntityId('bob'),
+		status: 'accepted',
+	},
+	{
+		id: new UniqueEntityId('bob-friendship'),
+	}
+)
 
-const receivedFriendship = makeFriendship({
-	fromUserId: new UniqueEntityId('carol'),
-	toUserId: userId,
-	status: 'pending',
-})
+const receivedFriendship = makeFriendship(
+	{
+		fromUserId: new UniqueEntityId('carol'),
+		toUserId: userId,
+		status: 'pending',
+	},
+	{
+		id: new UniqueEntityId('carol-friendship'),
+	}
+)
 
-const blockedFriendship = makeFriendship({
-	fromUserId: new UniqueEntityId('dave'),
-	toUserId: userId,
-	status: 'blocked',
-})
+const blockedFriendship = makeFriendship(
+	{
+		fromUserId: new UniqueEntityId('dave'),
+		toUserId: userId,
+		status: 'blocked',
+	},
+	{
+		id: new UniqueEntityId('dave-friendship'),
+	}
+)
 
 describe('Tabs | Use Case: ListFriendships', () => {
 	beforeEach(() => {
@@ -34,40 +49,57 @@ describe('Tabs | Use Case: ListFriendships', () => {
 		sut = new ListFriendshipsUseCase(friendshipsRepository)
 	})
 
-	it('should return friend user ids for non-blocked friendships', async () => {
+	it('should return a list of non-blocked friendships', async () => {
 		await friendshipsRepository.create(sentFriendship)
 		await friendshipsRepository.create(receivedFriendship)
 
-		const { friendUserIds } = await sut.execute({ userId: 'alice' })
+		const { friendships } = await sut.execute({ userId: 'alice' })
 
-		expect(friendUserIds).toEqual(['bob', 'carol'])
+		expect(friendships).toEqual([
+			{
+				id: new UniqueEntityId('bob-friendship'),
+				friend: { id: new UniqueEntityId('bob') },
+				status: 'accepted',
+			},
+			{
+				id: new UniqueEntityId('carol-friendship'),
+				friend: { id: new UniqueEntityId('carol') },
+				status: 'pending',
+			},
+		])
 	})
 
 	it('should not include blocked friendships', async () => {
 		await friendshipsRepository.create(blockedFriendship)
 
-		const { friendUserIds } = await sut.execute({ userId: 'alice' })
+		const { friendships } = await sut.execute({ userId: 'alice' })
 
-		expect(friendUserIds).toEqual([])
+		expect(friendships).toEqual([])
 	})
 
 	it('should filter by status', async () => {
 		await friendshipsRepository.create(sentFriendship)
 		await friendshipsRepository.create(receivedFriendship)
 
-		const { friendUserIds, meta } = await sut.execute({
+		const { friendships, meta } = await sut.execute({
 			userId: 'alice',
 			filters: { status: 'pending' },
 		})
 
-		expect(friendUserIds).toEqual(['carol'])
+		expect(friendships).toEqual([
+			{
+				id: new UniqueEntityId('carol-friendship'),
+				friend: { id: new UniqueEntityId('carol') },
+				status: 'pending',
+			},
+		])
 		expect(meta.totalItems).toBe(1)
 	})
 
 	it('should return an empty list when the user has no friendships', async () => {
-		const { friendUserIds } = await sut.execute({ userId: 'nobody' })
+		const { friendships } = await sut.execute({ userId: 'nobody' })
 
-		expect(friendUserIds).toEqual([])
+		expect(friendships).toEqual([])
 	})
 
 	it('should paginate with default page size', async () => {
@@ -83,7 +115,7 @@ describe('Tabs | Use Case: ListFriendships', () => {
 
 		const first = await sut.execute({ userId: 'alice' })
 
-		expect(first.friendUserIds).toHaveLength(20)
+		expect(first.friendships).toHaveLength(20)
 		expect(first.meta).toEqual({
 			page: 1,
 			size: 20,
@@ -94,7 +126,7 @@ describe('Tabs | Use Case: ListFriendships', () => {
 
 		const second = await sut.execute({ userId: 'alice', page: 2 })
 
-		expect(second.friendUserIds).toHaveLength(5)
+		expect(second.friendships).toHaveLength(5)
 		expect(second.meta).toEqual({
 			page: 2,
 			size: 20,
@@ -115,13 +147,13 @@ describe('Tabs | Use Case: ListFriendships', () => {
 			)
 		}
 
-		const { friendUserIds, meta } = await sut.execute({
+		const { friendships, meta } = await sut.execute({
 			userId: 'alice',
 			page: 1,
 			size: 2,
 		})
 
-		expect(friendUserIds).toHaveLength(2)
+		expect(friendships).toHaveLength(2)
 		expect(meta).toEqual({
 			page: 1,
 			size: 2,

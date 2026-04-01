@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { env } from '@/env'
 import { makeCreateMagicTokenUseCase } from '@/infra/factories/iam/make-create-magic-token-use-case'
 
 export async function magicToken(request: FastifyRequest, reply: FastifyReply) {
@@ -14,7 +15,13 @@ export async function magicToken(request: FastifyRequest, reply: FastifyReply) {
 	try {
 		const createMagicTokenUseCase = makeCreateMagicTokenUseCase()
 
-		await createMagicTokenUseCase.execute({ email })
+		const { token } = await createMagicTokenUseCase.execute({ email })
+
+		if (env.NODE_ENV === 'development') {
+			return reply.status(201).send({
+				token,
+			})
+		}
 
 		return reply.status(201).send()
 	} catch (error) {

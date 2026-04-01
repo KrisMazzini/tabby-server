@@ -5,6 +5,7 @@ import { treeifyError, ZodError } from 'zod'
 
 import { env } from '@/env'
 
+import { friendshipRoutes } from './http/controllers/v1/friendships/routes'
 import { userRoutes } from './http/controllers/v1/users/routes'
 
 export const app = fastify()
@@ -23,6 +24,9 @@ app.register(fastifyJwt, {
 app.register(fastifyCookie)
 
 app.register(userRoutes, { prefix: '/api/v1' })
+app.register(friendshipRoutes, {
+	prefix: '/api/v1/friendships',
+})
 
 app.setErrorHandler((error, _, reply) => {
 	if (error instanceof ZodError) {

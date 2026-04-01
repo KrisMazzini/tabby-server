@@ -1,3 +1,5 @@
+import type { UniqueEntityId } from '@/core/entities/value-objects/unique-entity-id'
+
 import type {
 	PaginationMeta,
 	PaginationParams,
@@ -16,7 +18,11 @@ interface ListFriendshipsUseCaseRequest {
 }
 
 interface ListFriendshipsUseCaseResponse {
-	friendUserIds: string[]
+	friendships: {
+		id: UniqueEntityId
+		friend: { id: UniqueEntityId }
+		status: 'pending' | 'accepted' | 'blocked'
+	}[]
 	meta: PaginationMeta
 }
 
@@ -38,12 +44,19 @@ export class ListFriendshipsUseCase {
 				filters
 			)
 
-		const friendUserIds = items.map(friendship => {
-			const from = friendship.fromUserId.toValue()
-			const to = friendship.toUserId.toValue()
-			return from === userId ? to : from
+		const friendships = items.map(friendship => {
+			const from = friendship.fromUserId
+			const to = friendship.toUserId
+
+			return {
+				id: friendship.id,
+				friend: {
+					id: from.toString() === userId ? to : from,
+				},
+				status: friendship.status,
+			}
 		})
 
-		return { friendUserIds, meta }
+		return { friendships, meta }
 	}
 }

@@ -12,6 +12,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum FriendshipStatus {
+  pending
+  accepted
+  blocked
+}
+
 model User {
   id          String    @id @default(uuid())
   email       String    @unique
@@ -20,7 +26,9 @@ model User {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
 
-  magicTokens MagicToken[]
+  magicTokens         MagicToken[]
+  friendshipsCreated  Friendship[] @relation("FriendshipFrom")
+  friendshipsReceived Friendship[] @relation("FriendshipTo")
 
   @@map("users")
 }
@@ -36,4 +44,21 @@ model MagicToken {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("magic_tokens")
+}
+
+model Friendship {
+  id         String           @id @default(uuid())
+  fromUserId String           @map("from_user_id")
+  toUserId   String           @map("to_user_id")
+  status     FriendshipStatus
+  createdAt  DateTime         @default(now()) @map("created_at")
+  updatedAt  DateTime?        @updatedAt @map("updated_at")
+
+  fromUser User @relation("FriendshipFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser   User @relation("FriendshipTo", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toUserId])
+  @@index([fromUserId])
+  @@index([toUserId])
+  @@map("friendships")
 }
