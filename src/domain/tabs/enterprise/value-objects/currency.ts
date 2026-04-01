@@ -1,7 +1,7 @@
 export interface CurrencyProps {
 	iso: string
-	name: string
-	symbol: string
+	name?: string
+	symbol?: string
 }
 
 export class Currency {
