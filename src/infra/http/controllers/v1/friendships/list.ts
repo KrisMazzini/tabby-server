@@ -5,18 +5,12 @@ import { makeListFriendshipsUseCase } from '@/infra/factories/tabs/make-list-fri
 
 export async function list(request: FastifyRequest, reply: FastifyReply) {
 	const listFriendshipsQuerySchema = z.object({
-		page: z.number().optional(),
-		size: z.number().optional(),
-		filters: z
-			.object({
-				status: z.enum(['pending', 'accepted']).optional(),
-			})
-			.optional(),
+		page: z.coerce.number().int().positive().optional(),
+		size: z.coerce.number().int().positive().optional(),
+		status: z.enum(['pending', 'accepted']).optional(),
 	})
 
-	const { page, size, filters } = listFriendshipsQuerySchema.parse(
-		request.query
-	)
+	const { page, size, status } = listFriendshipsQuerySchema.parse(request.query)
 
 	const listFriendshipsUseCase = makeListFriendshipsUseCase()
 
@@ -24,7 +18,9 @@ export async function list(request: FastifyRequest, reply: FastifyReply) {
 		userId: request.user.sub,
 		page,
 		size,
-		filters,
+		filters: {
+			status,
+		},
 	})
 
 	return reply.status(200).send({

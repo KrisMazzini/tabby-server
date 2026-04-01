@@ -110,7 +110,8 @@ export class PrismaFriendshipsRepository implements FriendshipsRepository {
 				size: pagination.size,
 				itemCount: friendships.length,
 				totalItems,
-				totalPages: Math.ceil(totalItems / pagination.size),
+				totalPages:
+					pagination.size === 0 ? 0 : Math.ceil(totalItems / pagination.size),
 			},
 		}
 	}
