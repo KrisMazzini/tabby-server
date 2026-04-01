@@ -66,8 +66,6 @@ O backend foi concebido com **Domain-Driven Design (DDD)** e **Clean Architectur
 
 ## How to run · Como executar o projeto
 
----
-
 ### Prerequisites · Pré-requisitos
 
 **EN**
