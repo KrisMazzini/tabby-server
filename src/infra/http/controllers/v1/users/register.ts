@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { InvalidDateOfBirthError } from '@/domain/iam/errors/invalid-date-of-birth-error'
 import { UserAlreadyExistsError } from '@/domain/iam/errors/user-already-exists-error'
 import { makeRegisterUseCase } from '@/infra/factories/iam/make-register-use-case'
+import { toHttpUserSerializer } from '@/infra/http/serializers/user-serializer'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
 	const registerBodySchema = z.object({
@@ -19,7 +20,9 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 
 		const { user } = await registerUseCase.execute({ name, email, dateOfBirth })
 
-		return reply.status(201).send({ user })
+		return reply.status(201).send({
+			user: toHttpUserSerializer(user),
+		})
 	} catch (error) {
 		if (error instanceof UserAlreadyExistsError) {
 			return reply.status(409).send({

@@ -5,6 +5,7 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { InvalidDateOfBirthError } from '@/domain/iam/errors/invalid-date-of-birth-error'
 import { UserAlreadyExistsError } from '@/domain/iam/errors/user-already-exists-error'
 import { makeUpdateProfileUseCase } from '@/infra/factories/iam/make-update-profile-use-case'
+import { toHttpUserSerializer } from '@/infra/http/serializers/user-serializer'
 
 export async function updateProfile(
 	request: FastifyRequest,
@@ -30,7 +31,9 @@ export async function updateProfile(
 			dateOfBirth,
 		})
 
-		return reply.status(200).send({ user })
+		return reply.status(200).send({
+			user: toHttpUserSerializer(user),
+		})
 	} catch (error) {
 		if (error instanceof ResourceNotFoundError) {
 			return reply.status(404).send({
