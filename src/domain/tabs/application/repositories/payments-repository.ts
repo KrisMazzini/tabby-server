@@ -7,6 +7,7 @@ import type { Payment } from '../../enterprise/entities/payment'
 
 export interface PaymentsListFilters {
 	role?: 'payer' | 'receiver'
+	friendId?: string
 	groupId?: string
 }
 

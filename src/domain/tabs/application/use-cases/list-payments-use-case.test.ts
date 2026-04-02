@@ -12,7 +12,11 @@ const userId = new UniqueEntityId('user-1')
 
 const payments = [
 	makePayment(
-		{ payerId: userId, groupId: new UniqueEntityId('group-a') },
+		{
+			payerId: userId,
+			receiverId: new UniqueEntityId('friend-1'),
+			groupId: new UniqueEntityId('group-a'),
+		},
 		{ id: new UniqueEntityId('payment-1') }
 	),
 	makePayment({ payerId: userId }, { id: new UniqueEntityId('payment-2') }),
@@ -66,6 +70,18 @@ describe('Tabs | Use Case: ListPayments', () => {
 
 		expect(result).toHaveLength(2)
 		expect(result).toEqual([payments[2], payments[3]])
+	})
+
+	it('should filter payments by friendId', async () => {
+		paymentsRepository.items.push(...payments)
+
+		const { payments: result } = await sut.execute({
+			userId: 'user-1',
+			filters: { friendId: 'friend-1' },
+		})
+
+		expect(result).toHaveLength(1)
+		expect(result).toEqual([payments[0]])
 	})
 
 	it('should filter payments by groupId', async () => {

@@ -43,6 +43,14 @@ export class InMemoryPaymentsRepository implements PaymentsRepository {
 				item.receiverId.equals(new UniqueEntityId(userId))
 		)
 
+		if (filters?.friendId) {
+			items = items.filter(
+				item =>
+					item.payerId.equals(new UniqueEntityId(filters.friendId)) ||
+					item.receiverId.equals(new UniqueEntityId(filters.friendId))
+			)
+		}
+
 		if (filters?.role === 'payer') {
 			items = items.filter(item =>
 				item.payerId.equals(new UniqueEntityId(userId))
