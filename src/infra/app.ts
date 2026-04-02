@@ -7,6 +7,7 @@ import { env } from '@/env'
 
 import { friendshipRoutes } from './http/controllers/v1/friendships/routes'
 import { groupRoutes } from './http/controllers/v1/groups/routes'
+import { paymentsRoutes } from './http/controllers/v1/payments/routes'
 import { userRoutes } from './http/controllers/v1/users/routes'
 
 export const app = fastify()
@@ -29,6 +30,7 @@ app.register(friendshipRoutes, {
 	prefix: '/api/v1/friendships',
 })
 app.register(groupRoutes, { prefix: '/api/v1/groups' })
+app.register(paymentsRoutes, { prefix: '/api/v1/payments' })
 
 app.setErrorHandler((error, _, reply) => {
 	if (error instanceof ZodError) {

@@ -36,6 +36,8 @@ model User {
   friendshipsReceived Friendship[]  @relation("FriendshipTo")
   ownedGroups         Group[]       @relation("GroupOwner")
   groupMemberships    GroupMember[]
+  paymentsSent        Payment[]     @relation("PaymentPayer")
+  paymentsReceived    Payment[]     @relation("PaymentReceiver")
 
   @@map("users")
 }
@@ -78,8 +80,9 @@ model Group {
   createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt          DateTime? @updatedAt @map("updated_at")
 
-  owner   User          @relation("GroupOwner", fields: [ownerId], references: [id])
-  members GroupMember[]
+  owner    User          @relation("GroupOwner", fields: [ownerId], references: [id])
+  members  GroupMember[]
+  payments Payment[]
 
   @@index([ownerId])
   @@map("groups")
@@ -98,4 +101,25 @@ model GroupMember {
   @@index([groupId])
   @@index([userId])
   @@map("group_members")
+}
+
+model Payment {
+  id            String    @id @default(uuid())
+  payerId       String    @map("payer_id")
+  receiverId    String    @map("receiver_id")
+  amountInCents Int       @map("amount_in_cents")
+  currencyIso   String    @map("currency_iso")
+  date          DateTime
+  groupId       String?   @map("group_id")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
+
+  payer    User   @relation("PaymentPayer", fields: [payerId], references: [id], onDelete: Restrict)
+  receiver User   @relation("PaymentReceiver", fields: [receiverId], references: [id], onDelete: Restrict)
+  group    Group? @relation(fields: [groupId], references: [id], onDelete: SetNull)
+
+  @@index([payerId])
+  @@index([receiverId])
+  @@index([groupId])
+  @@map("payments")
 }
