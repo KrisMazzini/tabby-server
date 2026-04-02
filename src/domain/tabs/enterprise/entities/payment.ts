@@ -2,6 +2,7 @@ import { Entity, type EntityArgs } from '@/core/entities/entity'
 import type { UniqueEntityId } from '@/core/entities/value-objects/unique-entity-id'
 
 import { InvalidAmountError } from '../../errors/invalid-amount-error'
+import { SelfPaymentError } from '../../errors/self-payment-error'
 import type { Currency } from '../value-objects/currency'
 
 export interface PaymentProps {
@@ -65,6 +66,10 @@ export class Payment extends Entity<PaymentProps> {
 	static create(props: PaymentProps, args?: EntityArgs) {
 		if (props.amountInCents <= 0) {
 			throw new InvalidAmountError()
+		}
+
+		if (props.payerId.equals(props.receiverId)) {
+			throw new SelfPaymentError()
 		}
 
 		return new Payment(props, args)

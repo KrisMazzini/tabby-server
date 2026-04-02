@@ -1,6 +1,7 @@
 import { UniqueEntityId } from '@/core/entities/value-objects/unique-entity-id'
 
 import { InvalidAmountError } from '../../errors/invalid-amount-error'
+import { SelfPaymentError } from '../../errors/self-payment-error'
 import { makeCurrency } from '../../tests/factories/make-currency'
 
 import { Payment } from './payment'
@@ -30,6 +31,18 @@ describe('Tabs | Entity: Payment', () => {
 		expect(payment.amountInCents).toBe(100)
 		expect(payment.currency.iso).toBe('BRL')
 		expect(payment.date).toEqual(new Date('2026-03-28'))
+	})
+
+	it('should not be possible to create a payment with the same payer and receiver', () => {
+		expect(() =>
+			Payment.create({
+				payerId: new UniqueEntityId('payer-1'),
+				receiverId: new UniqueEntityId('payer-1'),
+				amountInCents: 100,
+				currency: makeCurrency({ iso: 'BRL' }),
+				date: new Date(),
+			})
+		).toThrow(SelfPaymentError)
 	})
 
 	it('should not be possible to create a payment with an amount less  than or equal to 0', () => {
