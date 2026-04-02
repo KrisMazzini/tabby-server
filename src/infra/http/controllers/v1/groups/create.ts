@@ -8,11 +8,11 @@ import { toHttpGroupSerializer } from '@/infra/http/serializers/group-serializer
 export async function create(request: FastifyRequest, reply: FastifyReply) {
 	const createGroupBodySchema = z.object({
 		name: z.string().trim().min(1),
-		defaultCurrencyISO: z.string().min(3).max(3),
+		defaultCurrencyIso: z.string().min(3).max(3),
 		inviteeIds: z.array(z.string()).optional(),
 	})
 
-	const { name, defaultCurrencyISO, inviteeIds } = createGroupBodySchema.parse(
+	const { name, defaultCurrencyIso, inviteeIds } = createGroupBodySchema.parse(
 		request.body
 	)
 
@@ -21,7 +21,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
 	const { group } = await createGroupUseCase.execute({
 		ownerId: request.user.sub,
 		name,
-		defaultCurrency: Currency.create({ iso: defaultCurrencyISO }),
+		defaultCurrency: Currency.create({ iso: defaultCurrencyIso }),
 		inviteeIds,
 	})
 

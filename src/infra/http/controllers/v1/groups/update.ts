@@ -14,11 +14,11 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
 	const bodySchema = z.object({
 		name: z.string().trim().min(1),
-		defaultCurrencyISO: z.string().min(3).max(3),
+		defaultCurrencyIso: z.string().min(3).max(3),
 	})
 
 	const { groupId } = paramsSchema.parse(request.params)
-	const { name, defaultCurrencyISO } = bodySchema.parse(request.body)
+	const { name, defaultCurrencyIso } = bodySchema.parse(request.body)
 
 	try {
 		const updateGroupUseCase = makeUpdateGroupUseCase()
@@ -27,7 +27,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 			groupId,
 			userId: request.user.sub,
 			name,
-			defaultCurrency: Currency.create({ iso: defaultCurrencyISO }),
+			defaultCurrency: Currency.create({ iso: defaultCurrencyIso }),
 		})
 
 		return reply.status(200).send({

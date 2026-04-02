@@ -14,7 +14,7 @@ export function toHttpGroupSerializer(group: Group) {
 		id: group.id.toValue(),
 		name: group.name,
 		ownerId: group.ownerId.toValue(),
-		defaultCurrencyISO: group.defaultCurrency.iso,
+		defaultCurrencyIso: group.defaultCurrency.iso,
 		members: group.members.map(toHttpGroupMemberSerializer),
 		createdAt: group.createdAt,
 		updatedAt: group.updatedAt ?? null,
