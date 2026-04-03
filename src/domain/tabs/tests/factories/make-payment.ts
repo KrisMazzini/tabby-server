@@ -1,8 +1,7 @@
+import { faker } from '@faker-js/faker'
 import type { EntityArgs } from '@/core/entities/entity'
 import { UniqueEntityId } from '@/core/entities/value-objects/unique-entity-id'
-
 import { Payment, type PaymentProps } from '../../enterprise/entities/payment'
-
 import { makeCurrency } from './make-currency'
 
 export function makePayment(
@@ -13,7 +12,7 @@ export function makePayment(
 		{
 			payerId: new UniqueEntityId(),
 			receiverId: new UniqueEntityId(),
-			amountInCents: 100,
+			amountInCents: faker.number.int({ min: 100, max: 100_000 }),
 			currency: makeCurrency(),
 			date: new Date(),
 			...override,
