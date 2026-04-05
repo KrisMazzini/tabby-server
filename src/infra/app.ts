@@ -5,6 +5,7 @@ import { treeifyError, ZodError } from 'zod'
 
 import { env } from '@/env'
 
+import { expensesRoutes } from './http/controllers/v1/expenses/routes'
 import { friendshipRoutes } from './http/controllers/v1/friendships/routes'
 import { groupRoutes } from './http/controllers/v1/groups/routes'
 import { paymentsRoutes } from './http/controllers/v1/payments/routes'
@@ -31,6 +32,7 @@ app.register(friendshipRoutes, {
 })
 app.register(groupRoutes, { prefix: '/api/v1/groups' })
 app.register(paymentsRoutes, { prefix: '/api/v1/payments' })
+app.register(expensesRoutes, { prefix: '/api/v1/expenses' })
 
 app.setErrorHandler((error, _, reply) => {
 	if (error instanceof ZodError) {

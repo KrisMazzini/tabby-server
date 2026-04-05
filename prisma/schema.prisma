@@ -23,6 +23,13 @@ enum GroupMemberStatus {
   accepted
 }
 
+enum ExpenseSplitKind {
+  equally
+  byPercentage
+  byShares
+  byFixedAmounts
+}
+
 model User {
   id          String    @id @default(uuid())
   email       String    @unique
@@ -32,12 +39,14 @@ model User {
   updatedAt   DateTime? @updatedAt @map("updated_at")
 
   magicTokens         MagicToken[]
-  friendshipsCreated  Friendship[]  @relation("FriendshipFrom")
-  friendshipsReceived Friendship[]  @relation("FriendshipTo")
-  ownedGroups         Group[]       @relation("GroupOwner")
+  friendshipsCreated  Friendship[]   @relation("FriendshipFrom")
+  friendshipsReceived Friendship[]   @relation("FriendshipTo")
+  ownedGroups         Group[]        @relation("GroupOwner")
   groupMemberships    GroupMember[]
-  paymentsSent        Payment[]     @relation("PaymentPayer")
-  paymentsReceived    Payment[]     @relation("PaymentReceiver")
+  paymentsSent        Payment[]      @relation("PaymentPayer")
+  paymentsReceived    Payment[]      @relation("PaymentReceiver")
+  expenses            Expense[]      @relation("ExpensePayer")
+  expenseSlices       ExpenseSlice[]
 
   @@map("users")
 }
@@ -83,6 +92,7 @@ model Group {
   owner    User          @relation("GroupOwner", fields: [ownerId], references: [id])
   members  GroupMember[]
   payments Payment[]
+  expenses Expense[]
 
   @@index([ownerId])
   @@map("groups")
@@ -122,4 +132,41 @@ model Payment {
   @@index([receiverId])
   @@index([groupId])
   @@map("payments")
+}
+
+model Expense {
+  id                 String           @id @default(uuid())
+  payerId            String           @map("payer_id")
+  description        String
+  currencyIso        String           @map("currency_iso")
+  totalAmountInCents Int              @map("total_amount_in_cents")
+  date               DateTime
+  groupId            String?          @map("group_id")
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime?        @updatedAt @map("updated_at")
+  splitKind          ExpenseSplitKind @map("split_kind")
+
+  payer  User           @relation("ExpensePayer", fields: [payerId], references: [id], onDelete: Restrict)
+  group  Group?         @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  slices ExpenseSlice[]
+
+  @@index([payerId])
+  @@index([groupId])
+  @@map("expenses")
+}
+
+model ExpenseSlice {
+  expenseId     String @map("expense_id")
+  userId        String @map("user_id")
+  amountInCents Int?   @map("amount_in_cents")
+  percentage    Int?
+  shares        Int?
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@id([expenseId, userId])
+  @@index([expenseId])
+  @@index([userId])
+  @@map("expense_slices")
 }
