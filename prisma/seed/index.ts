@@ -1,3 +1,4 @@
+import { seedExpenses } from './expenses'
 import { seedFriendships } from './friendships'
 import { seedGroups } from './groups'
 import { seedPayments } from './payments'
@@ -8,6 +9,7 @@ async function main() {
 	await seedFriendships(users)
 	await seedGroups(users)
 	await seedPayments(users)
+	await seedExpenses(users)
 }
 
 main()

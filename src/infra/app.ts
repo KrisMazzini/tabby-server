@@ -2,6 +2,7 @@ import fastifyCookie from '@fastify/cookie'
 import fastifyJwt from '@fastify/jwt'
 import fastify from 'fastify'
 import { treeifyError, ZodError } from 'zod'
+
 import { EntityError } from '@/core/errors/entity-error'
 import { UseCaseError } from '@/core/errors/use-case-error'
 import { env } from '@/env'
