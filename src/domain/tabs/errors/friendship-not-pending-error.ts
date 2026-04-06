@@ -1,7 +1,7 @@
-import type { UseCaseError } from '@/core/errors/use-case-error'
+import { UseCaseError } from '@/core/errors/use-case-error'
 
-export class FriendshipNotPendingError extends Error implements UseCaseError {
+export class FriendshipNotPendingError extends UseCaseError {
 	constructor() {
-		super('Friendship is not pending.')
+		super('Friendship is not pending.', 'FRIENDSHIP_NOT_PENDING', 400)
 	}
 }

@@ -1,7 +1,11 @@
-import type { EntityError } from '@/core/errors/entity-error'
+import { EntityError } from '@/core/errors/entity-error'
 
-export class GroupOwnerMustBeAMemberError extends Error implements EntityError {
+export class GroupOwnerMustBeAMemberError extends EntityError {
 	constructor() {
-		super('The group owner must be a member of the group.')
+		super(
+			'The group owner must be a member of the group.',
+			'GROUP_OWNER_MUST_BE_A_MEMBER',
+			400
+		)
 	}
 }

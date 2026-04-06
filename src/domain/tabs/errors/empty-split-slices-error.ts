@@ -1,7 +1,11 @@
-import type { EntityError } from '@/core/errors/entity-error'
+import { EntityError } from '@/core/errors/entity-error'
 
-export class EmptySplitSlicesError extends Error implements EntityError {
+export class EmptySplitSlicesError extends EntityError {
 	constructor() {
-		super('Expense split must contain at least one slice.')
+		super(
+			'Expense split must contain at least one slice.',
+			'EMPTY_SPLIT_SLICES',
+			400
+		)
 	}
 }

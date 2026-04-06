@@ -1,7 +1,11 @@
-import type { EntityError } from '@/core/errors/entity-error'
+import { EntityError } from '@/core/errors/entity-error'
 
-export class SelfFriendshipError extends Error implements EntityError {
+export class SelfFriendshipError extends EntityError {
 	constructor() {
-		super('You cannot create a friendship with yourself.')
+		super(
+			'You cannot create a friendship with yourself.',
+			'SELF_FRIENDSHIP',
+			400
+		)
 	}
 }

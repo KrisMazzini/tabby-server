@@ -1,7 +1,11 @@
-import type { EntityError } from '@/core/errors/entity-error'
+import { EntityError } from '@/core/errors/entity-error'
 
-export class InvalidSharesSliceError extends Error implements EntityError {
+export class InvalidSharesSliceError extends EntityError {
 	constructor() {
-		super('Shares slice value must be greater than or equal zero.')
+		super(
+			'Shares slice value must be greater than or equal zero.',
+			'INVALID_SHARES_SLICE',
+			400
+		)
 	}
 }

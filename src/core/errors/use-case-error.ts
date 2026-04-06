@@ -1,3 +1,10 @@
-export interface UseCaseError {
-	message: string
+export abstract class UseCaseError extends Error {
+	code: string
+	httpStatus: number
+
+	constructor(message: string, code: string, httpStatus: number) {
+		super(message)
+		this.code = code
+		this.httpStatus = httpStatus
+	}
 }

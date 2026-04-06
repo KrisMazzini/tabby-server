@@ -1,7 +1,7 @@
-import type { EntityError } from '@/core/errors/entity-error'
+import { EntityError } from '@/core/errors/entity-error'
 
-export class SelfPaymentError extends Error implements EntityError {
+export class SelfPaymentError extends EntityError {
 	constructor() {
-		super('You cannot pay yourself.')
+		super('You cannot pay yourself.', 'SELF_PAYMENT', 400)
 	}
 }

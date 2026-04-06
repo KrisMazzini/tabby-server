@@ -1,7 +1,11 @@
-import type { EntityError } from '@/core/errors/entity-error'
+import { EntityError } from '@/core/errors/entity-error'
 
-export class FixedSplitTotalMismatchError extends Error implements EntityError {
+export class FixedSplitTotalMismatchError extends EntityError {
 	constructor() {
-		super('Fixed split amounts must sum to the expense total.')
+		super(
+			'Fixed split amounts must sum to the expense total.',
+			'FIXED_SPLIT_TOTAL_MISMATCH',
+			400
+		)
 	}
 }

@@ -1,7 +1,7 @@
-import type { EntityError } from '@/core/errors/entity-error'
+import { EntityError } from '@/core/errors/entity-error'
 
-export class InvalidAmountError extends Error implements EntityError {
+export class InvalidAmountError extends EntityError {
 	constructor() {
-		super('Amount must be greater than zero.')
+		super('Amount must be greater than zero.', 'INVALID_AMOUNT', 400)
 	}
 }

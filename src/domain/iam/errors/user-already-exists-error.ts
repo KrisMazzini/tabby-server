@@ -1,7 +1,7 @@
-import type { UseCaseError } from '@/core/errors/use-case-error'
+import { UseCaseError } from '@/core/errors/use-case-error'
 
-export class UserAlreadyExistsError extends Error implements UseCaseError {
+export class UserAlreadyExistsError extends UseCaseError {
 	constructor() {
-		super('User already exists.')
+		super('User already exists.', 'USER_ALREADY_EXISTS', 409)
 	}
 }

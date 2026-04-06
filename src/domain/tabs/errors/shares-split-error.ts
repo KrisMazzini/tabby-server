@@ -1,7 +1,7 @@
-import type { EntityError } from '@/core/errors/entity-error'
+import { EntityError } from '@/core/errors/entity-error'
 
-export class SharesSplitError extends Error implements EntityError {
+export class SharesSplitError extends EntityError {
 	constructor() {
-		super('Shares split values must be greater than 0.')
+		super('Shares split values must be greater than 0.', 'SHARES_SPLIT', 400)
 	}
 }

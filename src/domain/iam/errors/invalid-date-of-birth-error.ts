@@ -1,7 +1,7 @@
-import type { EntityError } from '@/core/errors/entity-error'
+import { EntityError } from '@/core/errors/entity-error'
 
-export class InvalidDateOfBirthError extends Error implements EntityError {
+export class InvalidDateOfBirthError extends EntityError {
 	constructor() {
-		super('User must be at least 18 years old.')
+		super('User must be at least 18 years old.', 'INVALID_DATE_OF_BIRTH', 400)
 	}
 }

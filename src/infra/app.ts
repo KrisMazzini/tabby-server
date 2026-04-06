@@ -2,7 +2,8 @@ import fastifyCookie from '@fastify/cookie'
 import fastifyJwt from '@fastify/jwt'
 import fastify from 'fastify'
 import { treeifyError, ZodError } from 'zod'
-
+import { EntityError } from '@/core/errors/entity-error'
+import { UseCaseError } from '@/core/errors/use-case-error'
 import { env } from '@/env'
 
 import { expensesRoutes } from './http/controllers/v1/expenses/routes'
@@ -35,6 +36,13 @@ app.register(paymentsRoutes, { prefix: '/api/v1/payments' })
 app.register(expensesRoutes, { prefix: '/api/v1/expenses' })
 
 app.setErrorHandler((error, _, reply) => {
+	if (error instanceof EntityError || error instanceof UseCaseError) {
+		return reply.status(error.httpStatus).send({
+			message: error.message,
+			code: error.code,
+		})
+	}
+
 	if (error instanceof ZodError) {
 		return reply.status(400).send({
 			message: 'Validation error.',
